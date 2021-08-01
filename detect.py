@@ -181,17 +181,7 @@ def do_video_processing(webcam,infer,configuration,labels):
         #allowing the programmer to quit the process by pressing q
         if cv2.waitKey(30) & 0xFF == ord('q'):
             break
-
-
-def main():
-   
-    labels=create_names_dictionary("./data/coco.names")
     
-    
-    saved_model_loaded,infer,configuration= configure()
+    cap.release()
+    cv2.destroyAllWindows() 
 
-    do_video_processing(0,infer,configuration,labels)
-    
-
-if __name__ == '__main__':
-    main()
