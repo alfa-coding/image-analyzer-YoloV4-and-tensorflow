@@ -18,6 +18,7 @@ def test_image_detection():
     assert detection_results==humans_picture
 
 def test_video_processing():
+    
     labels=create_names_dictionary("./data/coco.names")
     
     
