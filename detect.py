@@ -134,7 +134,7 @@ def do_image_processing(imagePath,infer,configuration,labels):
     
     return response
 
-def draw_image_anotations(response_with_annotations,img):
+#def draw_image_anotations(response_with_annotations,img):
     
 
 def main():

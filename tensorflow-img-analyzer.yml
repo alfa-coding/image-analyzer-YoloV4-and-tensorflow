@@ -1,0 +1,14 @@
+name: tensorflow-img-analyzer
+
+dependencies:
+  - python==3.7
+  - pip
+  - matplotlib
+  - opencv
+  - pip:
+    - opencv-python==4.5.2.52
+    - tensorflow
+    - pillow
+    - numpy
+    - scikit-image
+    - jupyterlab
