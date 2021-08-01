@@ -66,14 +66,14 @@ def buildObjectDetected(class_id,class_name, confidence, x, y, x_plus_w, y_plus_
 
     return obj
 
-def do_image_processing(imagePath,infer,configuration,labels):
+def do_image_processing(frame,infer,configuration,labels):
 
     input_size= configuration['input_size']
     iou=configuration['iou']
     score=configuration['score']
 
 
-    frame = cv2.imread(imagePath)
+    
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     image = Image.fromarray(frame)
 
@@ -119,8 +119,6 @@ def do_image_processing(imagePath,infer,configuration,labels):
    
     response=[]
     
-    print(classes)
-
     for index,id in enumerate(classes):
         class_name=labels[int(id)]
         bbox=bboxes[index]
@@ -134,15 +132,66 @@ def do_image_processing(imagePath,infer,configuration,labels):
     
     return response
 
-#def draw_image_anotations(response_with_annotations,img):
+def draw_image_anotations(response_with_annotations,img):
+    for annotation_info in response_with_annotations:
+
+        label=annotation_info["class"]
+        class_id=annotation_info['id']
+        confidence=annotation_info["confidence"]
+        x=annotation_info["x"]
+        y=annotation_info["y"]
+        y_plus_h=annotation_info["height"]
+        x_plus_w=annotation_info["width"]
+
+
+       
+
+        color = (255,0,255)
+
+        cv2.rectangle(img, (x,y), (x_plus_w,y_plus_h), color, 2)
+
+        cv2.putText(img, label, (x-10,y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
     
+    return img
+
+def test_drawing(img_path,annotations):
+    img=cv2.imread(img_path)
+    if img.size ==0:
+        print("Failed to load frame")
+        return
+    else:
+        annotated_img=draw_image_anotations(annotations,img)
+        cv2.imshow("annotations",annotated_img)
+        if cv2.waitKey(0) & 0xFF == ord('q'):
+            print("Exiting")
+
+def do_video_processing(webcam,infer,configuration,labels):
+    cap= cv2.VideoCapture(webcam)
+    while True:        
+        # Capture frame-by-frame
+        ret, frame = cap.read()
+        if ret==False:
+            break
+        else:
+            #process the resulting frame
+            detection_results= do_image_processing(frame,infer,configuration,labels)
+            annotated_img=draw_image_anotations(detection_results,frame)
+            cv2.imshow("annotations",annotated_img)
+
+        #allowing the programmer to quit the process by pressing q
+        if cv2.waitKey(30) & 0xFF == ord('q'):
+            break
+
 
 def main():
-    img_path="data/humans.jpg"
+   
     labels=create_names_dictionary("./data/coco.names")
+    
+    
     saved_model_loaded,infer,configuration= configure()
-    detection_results= do_image_processing(img_path,infer,configuration,labels)
-    print(detection_results)
+
+    do_video_processing(0,infer,configuration,labels)
+    
 
 if __name__ == '__main__':
     main()
