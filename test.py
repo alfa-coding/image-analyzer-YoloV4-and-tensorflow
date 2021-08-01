@@ -1,3 +1,4 @@
+import cv2
 from detect import create_names_dictionary,configure,do_image_processing,test_drawing,do_video_processing
 
 
@@ -28,3 +29,9 @@ def test_video_processing():
     saved_model_loaded,infer,configuration= configure()
 
     do_video_processing(0,infer,configuration,labels)
+
+    
+
+
+#call any of the two functions to see the results
+test_video_processing()
